@@ -1,5 +1,8 @@
 class MoviesController < ApplicationController
 
+   #attr_accessor :all_ratings
+ # attr_accessor :selected_ratings
+
   def show
     id = params[:id] # retrieve movie ID from URI route
     @movie = Movie.find(id) # look up movie by unique ID
@@ -7,12 +10,18 @@ class MoviesController < ApplicationController
   end
 
   def index
+    @selected_ratings = Array.new
     if params.has_key?('filter')
         puts 'Yes'
-        self.sort
+        self.sort    
     else
         @movies = Movie.all
     end
+    if params.has_key?('ratings')
+       @selected_ratings = params['ratings'].keys
+    end 
+    @all_ratings = Movie.get_all_ratings
+    logger.debug @all_ratings[1]
   end
 
   def new
