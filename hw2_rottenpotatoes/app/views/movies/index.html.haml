@@ -4,9 +4,9 @@
 %table#movies
   %thead
     %tr
-      %th Movie Title
+      %th#title_header= link_to "Movie Title", sort_url(:field => 'title')
       %th Rating
-      %th Release Date
+      %th#release_date_header Release Date
       %th More Info
   %tbody
     - @movies.each do |movie|

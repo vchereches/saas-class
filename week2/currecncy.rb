@@ -2,6 +2,7 @@
 
 class Numeric
   @@currencies = {'yen' => 0.013, 'euro' => 1.292, 'rupee' => 0.019, 'dollar' => 1} 
+  @@currencies_from_dollar = {'yen' => 76.92, 'euro' => 0.773, 'dollar' => 1.00, 'rupee' => 52.63}
   def method_missing(method_id)
     singular_currency = method_id.to_s.gsub( /s$/, '')
     if @@currencies.has_key?(singular_currency)
@@ -11,23 +12,45 @@ class Numeric
     end
   end
 
-  def in(method)
-	self.dollars.send ("#{method}")
+  def in(new_currency)
+    singular_new_currency = new_currency.to_s.gsub(/s$/, '')
+    if @@currencies_from_dollar.has_key?(singular_new_currency)
+      self * @@currencies_from_dollar[singular_new_currency]
+    end
   end
 end
 
-def palindrome?(input)
-	input.gsub!(/\W/,'')
-	return input.downcase == input.reverse.downcase
-end
+
 
 class String
-  def method_missing(method_id)
-   if (method_id.to_s == "palindrome?")
-      palindrome?(self)
-   else
-	super
-   end
+  def palindrome?
+	self.gsub!(/\W/,'')
+	return self.downcase == self.reverse.downcase
+  end 
+end
+
+class Enumerator
+  include Enumerable
+  def palindrome?
+    self.to_a.palindrome?
+  end
+end
+
+class Hash
+  def palindrome?
+    return true
+  end
+end
+
+class Range
+  def palindrome?
+    p self.to_a == self.to_a.reverse
+  end
+end
+
+class Object
+  def palindrome?
+    return self
   end
 end
 
@@ -37,4 +60,3 @@ class Array
    end
 end
 
-5.rupees.in(:yen)
