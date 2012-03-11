@@ -7,7 +7,12 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @movies = Movie.all
+    if params.has_key?('filter')
+        puts 'Yes'
+        self.sort
+    else
+        @movies = Movie.all
+    end
   end
 
   def new
@@ -39,8 +44,12 @@ class MoviesController < ApplicationController
   end
 
   def sort
-    sort_by = params[:field]
-    puts sort_by
+    sort_by = params['filter']
     @movies = Movie.find(:all, :order => sort_by)
+    if params[:class] == 'title'
+        @title = 'hilite'
+    else
+        @date = 'hilite'
+    end
   end
 end
