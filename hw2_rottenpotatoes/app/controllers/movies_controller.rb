@@ -11,6 +11,26 @@ class MoviesController < ApplicationController
 
   def index
     @selected_ratings = Array.new
+    need_redirect = false
+    if params[:ratings] == nil
+      if (session[:ratings] != nil)
+        params[:ratings] = session[:ratings]
+        need_redirect = true
+      end
+    else
+      session[:ratings] = params[:ratings]
+    end
+    if (params[:filter] == nil)
+      if (session[:filter] != nil)
+        params[:filter] = session[:filter]
+        need_redirect = true
+      end
+    else
+      session[:filter] = params[:filter]
+    end
+    if (need_redirect)
+      redirect_to movies_path(params.merge(:filter => params[:filter], :ratings => params[:ratings]))
+    end
     if params.has_key?('filter')
         puts 'Yes'
         self.sort    
