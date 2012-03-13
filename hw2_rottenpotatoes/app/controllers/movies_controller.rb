@@ -19,6 +19,7 @@ class MoviesController < ApplicationController
     end
     if params.has_key?('ratings')
        @selected_ratings = params['ratings'].keys
+       @movies = @movies.select { |x| @selected_ratings.include? (x.rating)}
     end 
     @all_ratings = Movie.get_all_ratings
     logger.debug @all_ratings[1]
